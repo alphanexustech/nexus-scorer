@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "30befbc4229d2d9a391bfca8df47f57ddbfa215a3449760ab1b270f9f3dd327d"
+            "sha256": "316c79dcfd4f3952aea96279dd30ce63effaf75221e9e4dbde9269f9769a3671"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -97,11 +97,12 @@
             ],
             "version": "==1.0"
         },
-        "py2neo": {
+        "nltk": {
             "hashes": [
-                "sha256:8177a9b2c4d23a3ce26f02d3d6be92ac49cb7520e88ec1b41d8c6e86774938b8"
+                "sha256:2661f9971d983db314bbebd51ba770811a362c6597fd0f303bb1d3beadcb4834",
+                "sha256:8a3bad9ff7f67d2828a7915c2fab93e6ca910c2015ef40799e1805fccf2354e5"
             ],
-            "version": "==3.1.2"
+            "version": "==3.2.5"
         },
         "pymongo": {
             "hashes": [
