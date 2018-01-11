@@ -315,8 +315,8 @@ def process_emotion(doc, lang, emotion, natural, stemmer, lemma, emotion_stop_wo
 def process_emotion_set(doc, lang, emotion_set, natural, stemmer, lemma, emotion_stop_words):
 
     processed_doc_list_metadata = []
-    emotion_sets = ['emotion_ml', 'all_emotions', 'big_6',
-    'everday_categories', 'occ_categories', 'fsre_categories', 'dimensions']
+    emotion_sets = ['emotion_ml', 'all_emotions', 'big_6', 'everday_categories',
+    'occ_categories', 'fsre_categories', 'frijda_categories', 'dimensions']
 
     e_set = None
     # pick emotion_set
