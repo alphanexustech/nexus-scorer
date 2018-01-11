@@ -5,8 +5,6 @@ from datetime import datetime
 
 from . import controllers
 
-utc = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3],
-
 core = Blueprint('core', __name__)
 
 @core.route('/')
@@ -62,6 +60,8 @@ def analyze_emotion_set(emotion_set):
     natural = r.get('natural')
     stemmer = r.get('stemmer')
     lemma = r.get('lemma')
+
+    utc = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3],
 
     emotion_stop_words = []
     if upper_bound == None and lower_bound == None:
