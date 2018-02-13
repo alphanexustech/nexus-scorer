@@ -311,7 +311,75 @@ def process_emotion(doc, lang, emotion, natural, stemmer, lemma, emotion_stop_wo
 
     return processed_doc_metadata
 
-# IDEA: Error Handling needed!
+def handle_null_doc(doc, lang, emotion, natural, stemmer, lemma, emotion_stop_words):
+
+    flags = {}
+    flags['naturalFlag'] = natural
+    flags['stemmerFlag'] = stemmer
+    flags['lemmaFlag'] = lemma
+
+    valid_orders = ['order-1', 'order-2', 'order-3', 'order_1_and_2', 'order_1_and_3', 'order_2_and_3', 'all_orders']
+
+    processed_null_doc_metadata = {
+        "status": "success",
+        "emotion": emotion,
+    }
+
+    '''
+    Remove emotion stop words and then return the words lists
+    '''
+    # IDEA: There is a more efficient way to do this
+    pre_list_of_words = []
+    pre_stemmed_list = []
+    pre_lemmatized_list = []
+
+    # IDEA: Handle language that isn't supported by stemmer!
+    stemmer = SnowballStemmer(lang) # This is the stemmer
+    lemma = WordNetLemmatizer() # This is the lemma
+    for word in pre_list_of_words:
+        pre_stemmed_list.append(lemma.lemmatize(word))
+        pre_lemmatized_list.append(stemmer.stem(word))
+
+    # Create a dictionary of the three lists without emotion based stop words
+    word_lists_no_emotion_stop = {
+        'list_of_words': [],
+        'stemmed_list': [],
+        'lemmatized_list': [],
+    }
+    # Remove emotion_stop_words only for these if the flag is set to true
+    if flags['stemmerFlag'] == '1':
+        word_lists_no_emotion_stop['stemmed_list'] = []
+    if flags['lemmaFlag'] == '1':
+        word_lists_no_emotion_stop['lemmatized_list'] = []
+
+    for order in valid_orders:
+        order_result = process_order(doc, lang, emotion, flags, emotion_stop_words, word_lists_no_emotion_stop, order)
+        if order_result['status'] == 'success':
+            processed_null_doc_metadata[order] = order_result
+
+    # IDEA: This needs to be moved
+    list_of_words_no_stop = []
+    length_words_no_stop = len(list_of_words_no_stop)
+
+    # Find some scores for each order
+    is_in_order_1 = processed_null_doc_metadata['order-1']['is_in_order']
+    is_in_order_2 = processed_null_doc_metadata['order-2']['is_in_order']
+    is_in_order_3 = processed_null_doc_metadata['order-3']['is_in_order']
+    normalized_order_1 = processed_null_doc_metadata['order-1']['normalized_order']
+    normalized_order_2 = processed_null_doc_metadata['order-2']['normalized_order']
+    normalized_order_3 = processed_null_doc_metadata['order-3']['normalized_order']
+
+    r_affect_score = 0
+    normalized_r_score = 0
+    r_affect_density_score = 0
+
+    processed_null_doc_metadata['r_affect_score'] = r_affect_score
+    processed_null_doc_metadata['normalized_r_score'] = normalized_r_score
+    processed_null_doc_metadata['r_affect_density_score'] = r_affect_density_score
+    processed_null_doc_metadata['length_words_no_stop'] = length_words_no_stop
+
+    return processed_null_doc_metadata
+
 def process_emotion_set(doc, lang, emotion_set, natural, stemmer, lemma, emotion_stop_words):
 
     processed_doc_list_metadata = []
@@ -325,8 +393,11 @@ def process_emotion_set(doc, lang, emotion_set, natural, stemmer, lemma, emotion
     else:
         e_set = []
 
-    # IDEA: Better error handling here would be nice!
     for emotion in e_set:
-        processed_doc_list_metadata.append(process_emotion(doc, lang, emotion, natural, stemmer, lemma, emotion_stop_words))
+        if len(doc.strip()) < 1:
+            # Return empty emotion set objects for each emotion
+            processed_doc_list_metadata.append(handle_null_doc(doc, lang, emotion, natural, stemmer, lemma, emotion_stop_words))
+        else:
+            processed_doc_list_metadata.append(process_emotion(doc, lang, emotion, natural, stemmer, lemma, emotion_stop_words))
 
     return processed_doc_list_metadata
